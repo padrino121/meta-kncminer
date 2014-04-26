@@ -65,3 +65,7 @@ else
         echo low > /sys/class/gpio/gpio70/direction
         echo high > /sys/class/gpio/gpio71/direction
 fi
+
+#modules for bertmod
+insmod usbserial.ko 2>/dev/null >/dev/null
+insmod ftdi_sio.ko vendor=0x0403 product=0x6014 2>/dev/null >/dev/null

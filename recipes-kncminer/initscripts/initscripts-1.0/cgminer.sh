@@ -22,7 +22,45 @@ set -e
 
 test -x "$DAEMON" || exit 0
 
+json=""
+if [ -f /config/advanced.conf ]; then
+        json=$(cat /config/advanced.conf)
+fi
+
+get_freq()
+{
+echo $json | awk -v k="text" '{n=split($0,a,"}"); for (i=1; i<=n; i++) print a[i]}' \
+ | grep asic_$1_frequency \
+ | awk -v k="text" '{n=split($0,a,"{"); for (i=1; i<=n; i++) print a[i]}' \
+ | awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]}' \
+ | grep die$2 | sed 's/ //g' | sed 's/"//g' | awk -F':' '{print $2}'
+}
+
+do_clocks() {
+  for c in 0 1 2 3 ; do
+          port=$(($1 + 1))
+          die=$(($c + 1))
+          INDEX=""
+          INDEX=$(get_freq $port $die)
+          case $INDEX in
+            *0x*)
+                # Re-enable PLL
+                #i2cset -y 2 0x71 1 $(($1+1))
+                cmd=$(printf "0x84,0x%02X,0,0" $c)
+                spi-test -s 50000 -OHC -D /dev/spidev1.0 $cmd >/dev/null
+                ONE=${INDEX:2:1}
+                TWO=${INDEX:3:2}
+                cmd=$(printf "0x86,0x%02X,0x0$ONE,0x$TWO" $c)
+                spi-test -s 50000 -OHC -D /dev/spidev1.0 $cmd >/dev/null
+                cmd=$(printf "0x85,0x%02X,0,0" $c)
+                spi-test -s 50000 -OHC -D /dev/spidev1.0 $cmd >/dev/null ;;
+          esac
+  done
+}
+
 do_start() {
+	/usr/bin/waas -c /config/advanced.conf > /dev/null
+	sleep 5
 	# Stop SPI poller
 	spi_ena=0
 	i2cset -y 2 0x71 2 $spi_ena
@@ -66,6 +104,9 @@ do_start() {
 
 	if [ -n "$good_ports" ] ; then
 		for p in $good_ports ; do
+			i2cset -y 2 0x71 1 $((p+1))
+			do_clocks $p
+
 			# re-enable all cores
 			i=0
 			while [[ $i -lt 192 ]] ; do
@@ -102,17 +143,18 @@ do_stop() {
 case "$1" in
   start)
         echo -n "Starting $DESC: "
-	do_start
+		do_start
         echo "$NAME."
         ;;
   stop)
         echo -n "Stopping $DESC: "
-	do_stop
+		do_stop
         echo "$NAME."
         ;;
   restart|force-reload)
         echo -n "Restarting $DESC: "
         do_stop
+		do_stop
         do_start
         echo "$NAME."
         ;;

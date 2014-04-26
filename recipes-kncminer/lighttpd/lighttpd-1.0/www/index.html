@@ -11,10 +11,12 @@
 	<script type="text/javascript">
 	  $(document).ready(function() {
 	    var requesting=false;
+            var requestingBertMod=false;
 	    var initialized=false;
 
 	    if (!initialized) { 
 	      $('#resultWrapper').load( "/cgi-bin/fetch_mining_stat.cgi #result");
+              $('#bertmodWrapper').load( "/cgi-bin/asic_status.pl");
 	      initialized = true;
 	    }
 	    var int=self.setInterval(function(){
@@ -23,6 +25,12 @@
 	        $('#resultWrapper').load( "/cgi-bin/fetch_mining_stat.cgi #result", function(){requesting=false;} );
 	      }
 	    },5000);
+            var int2=self.setInterval(function(){
+              if (!requestingBertMod) {
+                requestingBertMod=true;
+                $('#bertmodWrapper').load( "/cgi-bin/asic_status.pl", function(){requestingBertMod=false;} );
+              }
+            },60000);
 	  });
 	</script>
 </head>
@@ -59,6 +67,7 @@
 			<div class="xbox">
 			     <div id="resultWrapper"></div>
 			     <div class="section"></div>
+                             <div id="bertmodWrapper">Loading BertMod statistics... please wait.</div>
 			</div>
 		</div>
 	</div>
