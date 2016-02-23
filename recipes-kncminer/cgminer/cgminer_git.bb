@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/ckolivas/cgminer.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_prepend = "-I ${S}/compat/jansson-2.5/src"
+CFLAGS_prepend = "-I ${S}/compat/jansson-2.6/src"
 
 EXTRA_OECONF = " \
 	     --enable-knc \
