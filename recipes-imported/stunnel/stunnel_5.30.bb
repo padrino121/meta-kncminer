@@ -6,8 +6,8 @@ DEPENDS = "openssl"
 
 SRC_URI = "https://www.stunnel.org/downloads/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "7b63266b6fa05da696729e245100da65"
-SRC_URI[sha256sum] = "2565bf58ffe8a612304c64df621105b2e42d6e389e815ed4205dbeec4f3f886b"
+SRC_URI[md5sum] = "7bbf27296a83c0b752f6bb6d1b750b19"
+SRC_URI[sha256sum] = "7d6eb389f6a1954b3bcf6c71d4ae3c5f9dde1990dd0b9e0cb1c7caf138d60570"
 
 inherit autotools
 
