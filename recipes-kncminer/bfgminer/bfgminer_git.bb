@@ -6,14 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 # that's why cgminer is in dependencies
 DEPENDS = "ncurses curl cgminer"
 
-SRCREV = "bfgminer-3.8.1"
+SRCREV = "bfgminer-5.4.1"
 PV = "${SRCREV}+git${SRCPV}"
 
 SRC_URI = "git://github.com/luke-jr/bfgminer.git;protocol=https;branch=bfgminer"
-
-SRC_URI_append = " file://knc-spidevc-fix.patch \
-		file://0002-Workaround-for-KnCMiner-November-batch.patch \
-				 "
 
 S = "${WORKDIR}/git"
 
