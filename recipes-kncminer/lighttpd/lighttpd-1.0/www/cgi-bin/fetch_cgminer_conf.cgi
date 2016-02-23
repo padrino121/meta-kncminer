@@ -51,15 +51,10 @@ input=`echo "$line" ; cat`
 
 if [ "${input:-null}" != "null" ] ; then
     if [ "$input" = "FactoryDefault" ] ; then
-	if [ -f /config/cgminer.conf.factory ] ; then
-	    cp /config/cgminer.conf.factory /config/cgminer.conf
-	else
-	    create_dummy_conf_file
-	fi
 	rm -f "$MINER_CONF"
 	minerconfstart=1
     elif [ "$input" = "RestartCGMiner" ] ; then
-	/etc/init.d/cgminer.sh restart > /dev/null
+	/etc/init.d/bfgminer.sh restart > /dev/null
     else
 	# Perhaps this needs to be re-validated as proper JSON,
 	# even though the web form will not allow to save
@@ -70,16 +65,12 @@ if [ "${input:-null}" != "null" ] ; then
     fi
 fi
 
-if [[ "$minerconfstart" = "1" ]]; then
-    /etc/firewall_setup
+if [ ! -f /config/cgminer.conf ] ; then
+	create_dummy_conf_file
 fi
 
-if [ ! -f /config/cgminer.conf ] ; then
-    if [ -f /config/cgminer.conf.factory ] ; then
-	cp /config/cgminer.conf.factory /config/cgminer.conf
-    else
-	create_dummy_conf_file
-    fi
+if [[ "$minerconfstart" = "1" ]]; then
+    /etc/firewall_setup
 fi
 
 if [ -f /config/miner.conf ]; then

@@ -11,12 +11,10 @@
 	<script type="text/javascript">
 	  $(document).ready(function() {
 	    var requesting=false;
-            var requestingBertMod=false;
 	    var initialized=false;
 
 	    if (!initialized) { 
 	      $('#resultWrapper').load( "/cgi-bin/fetch_mining_stat.cgi #result");
-              $('#bertmodWrapper').load( "/cgi-bin/asic_status.pl");
 	      initialized = true;
 	    }
 	    var int=self.setInterval(function(){
@@ -25,12 +23,6 @@
 	        $('#resultWrapper').load( "/cgi-bin/fetch_mining_stat.cgi #result", function(){requesting=false;} );
 	      }
 	    },5000);
-            var int2=self.setInterval(function(){
-              if (!requestingBertMod) {
-                requestingBertMod=true;
-                $('#bertmodWrapper').load( "/cgi-bin/asic_status.pl", function(){requestingBertMod=false;} );
-              }
-            },60000);
 	  });
 	</script>
 </head>
@@ -45,11 +37,9 @@
 				<div id="sub_nav" class="span_12_of_12">
 					<a href="/" class="active">Status</a>
 					<a href="/miner_setting.html">Mining</a>
-					<a href="/cgi-bin/get_network_conf.cgi">Networking</a>
-					<a href="/services_conf.html">Services</a>
 					<a href="/system_management.cgi">System</a>
-					<a href="/advanced_settings.html">Advanced</a>
-					<a href="/firmware_upgrade.html">Upgrade</a>
+                                        <a href="/advanced_settings.html">Advanced</a>
+					<a href="/backup.html">Backup</a>
 				</div>
 			</nav>
 
@@ -57,9 +47,7 @@
 		<div id="header" class="section">
 			<div class="span_12_of_12">
 				<div class="xbox box">
-					<div class="span_7_of_12">
-						<h1>Miner Status</h1>
-					</div>
+					<h1>Miner Status [#%#HOSTNAME#%#]</h1>
 				</div>
 			</div>
 		</div>
@@ -67,7 +55,6 @@
 			<div class="xbox">
 			     <div id="resultWrapper"></div>
 			     <div class="section"></div>
-                             <div id="bertmodWrapper">Loading BertMod statistics... please wait.</div>
 			</div>
 		</div>
 	</div>
