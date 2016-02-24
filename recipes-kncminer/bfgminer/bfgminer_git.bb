@@ -23,6 +23,9 @@ EXTRA_OECONF = " \
 		--disable-hashbusterusb \
 		--without-libusb \
 		--enable-knc \
+		--enable-kncasic \
+		--enable-titan \
+		--enable-scrypt
 		"
 
 do_configure_prepend() {
