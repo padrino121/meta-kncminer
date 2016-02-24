@@ -25,7 +25,7 @@ EXTRA_OECONF = " \
 		--enable-knc \
 		--enable-kncasic \
 		--enable-titan \
-		--enable-scrypt
+		--enable-scrypt \
 		"
 
 do_configure_prepend() {
